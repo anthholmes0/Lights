@@ -8,7 +8,7 @@ from his collection Silence in the Snowy Fields : Poems
 --------------------
 Surprised by Evening
 --------------------
-1  There is unknown dust that is near us,
+1  There is unknown dust that is near us,\n
 2  Waves breaking on shores just over the hill,
 3  Trees full of birds that we have never seen,
 4  Nets drawn down with dark fish.
