@@ -29,6 +29,7 @@ class Boundary
 		}
 
 		void show();
+		void set_p1_test(vec2 p1_);
 };
 
 void Boundary::show()
@@ -39,4 +40,10 @@ void Boundary::show()
 	gl::drawSolidCircle(p1, 3); //start point
 	gl::drawLine(p1, p2);	    //line
 	gl::drawSolidCircle(p2, 3); //end point
+}
+
+void Boundary::set_p1_test(vec2 p1_)
+{
+	p1 = p1_;
+	angle = atan((p2.y - p1.y)/(p2.x - p1.x));
 }

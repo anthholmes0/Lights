@@ -32,7 +32,8 @@ class BasicApp : public App
 void BasicApp::setup()
 {
 	//boundaries
-	//w1.addBoundary(WIDTH/2, 50, WIDTH/2, HEIGHT-50, 50);
+	//w1.addBoundary(WIDTH/2, 50, WIDTH/2, HEIGHT-50, 10);
+	//w1.addBoundary(WIDTH/2, HEIGHT-50, WIDTH/4, HEIGHT-50, 10);
 
 	w1.addBoundary(50, 50, 100, 50);
 	w1.addBoundary(100, 50, 100, HEIGHT-100);
@@ -51,15 +52,20 @@ void BasicApp::setup()
 		bd.absorption = 1;
 	}
 
-
 	//lights
-	w1.addLight(Laser(vec2(WIDTH-75, 250), M_PI/3, w1.boundaries));
-	//w1.addLight(Lamp(vec2(WIDTH/2+25, 250), 10, w1.boundaries));
+	//w1.addLight(Laser(vec2(50, 50), M_PI/4, w1.boundaries));
+	w1.addLight(Lamp(vec2(WIDTH/2, HEIGHT/2), 20, w1.boundaries));
 }
 
 void BasicApp::update()
 {
-	//nothing atm
+	for (LightSource& l : w1.lights)
+	{
+		for (Beam& bm : l.beams)
+		{
+			bm.calcIncidence(w1.boundaries);
+		}
+	}
 }
 
 void BasicApp::draw()
@@ -69,7 +75,25 @@ void BasicApp::draw()
 
 void BasicApp::mouseDown(MouseEvent event)
 {
+	// DEBUG //
+	/*
+	for (LightSource& l : w1.lights)
+	{
+		for (Beam& bm : l.beams)
+		{
+			cout << "Beam Incidence: " << bm.incident_upon_boundary << endl;
 
+			string title = "Reflection ";
+			Beam* b = bm.reflection;
+			while (b != NULL)
+			{
+				cout << title << "Incidence: " << b->incident_upon_boundary << endl;
+				b = b->reflection;
+				title += "Reflection ";
+			}
+		}
+	}
+	*/
 }
 
 void BasicApp::mouseUp(MouseEvent event)
@@ -81,6 +105,9 @@ void BasicApp::mouseMove(MouseEvent event)
 {
 	ivec2 mousePos = event.getPos();
 
+	w1.boundaries.at(0).set_p1_test(mousePos); // move boundary around with mouse
+
+	/*
 	for (LightSource& l : w1.lights)
 	{
 		for (Beam& bm : l.beams)
@@ -89,6 +116,7 @@ void BasicApp::mouseMove(MouseEvent event)
 			bm.calcIncidence(w1.boundaries);
 		}
 	}
+	*/
 }
 
 void BasicApp::mouseDrag(MouseEvent event)
