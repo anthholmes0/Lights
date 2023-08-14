@@ -77,22 +77,44 @@ void BasicApp::mouseDown(MouseEvent event)
 {
 	// DEBUG //
 	/*
+	cout << "Boundaries:" << endl;
+	for (Boundary& bd : w1.boundaries)
+	{
+		cout << "-> " << &bd << endl;
+	}
+
+	cout << "Beam Incident Boundaries:" << endl;
+	for (LightSource& l : w1.lights)
+        {
+                for (Beam& bm : l.beams)
+                {
+                        cout << "-> " << bm.incident_boundary << endl;
+
+                        Beam* b = bm.reflection;
+                        while (b != NULL)
+                        {
+                                cout << "    -> " << b->incident_boundary << endl;
+                                b = b->reflection;
+                        }
+                }
+        }
+
+	cout << "Beam Source Boundaries:" << endl;
 	for (LightSource& l : w1.lights)
 	{
 		for (Beam& bm : l.beams)
 		{
-			cout << "Beam Incidence: " << bm.incident_upon_boundary << endl;
+			cout << "-> " << bm.source_boundary << endl;
 
-			string title = "Reflection ";
 			Beam* b = bm.reflection;
 			while (b != NULL)
 			{
-				cout << title << "Incidence: " << b->incident_upon_boundary << endl;
+				cout << "    -> " << b->source_boundary << endl;
 				b = b->reflection;
-				title += "Reflection ";
 			}
 		}
 	}
+	cout << endl;
 	*/
 }
 
