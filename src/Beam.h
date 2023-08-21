@@ -1,3 +1,4 @@
+
 #include "cinder/gl/gl.h"
 
 #include "Boundary.h"
@@ -37,6 +38,7 @@ class Beam
 
 		void show();
 		void calcIncidence(vector<Boundary>& boundaries);
+		//bool checkBoundary(vector<vec2> bounding_box);
 
 	protected:
 		float MIN_LEN = sqrt(getWindowWidth()*getWindowWidth() + getWindowHeight()*getWindowHeight());
@@ -66,19 +68,20 @@ void Beam::calcIncidence(vector<Boundary>& boundaries)
 	{
 		if (&bd != source_boundary) // don't reflect of the source boundary
 		{
-			//could implement optimization here to check only those boundaries whose bounding box overlaps with the beams bounding box
+			//if (checkBoundary(bd.bounding_box())) // don't check those boundaries whose bounding boxes lie outside the quandrant the beam lies in
+			//{		//TROUBLESHOOTING THIS
+				float len_to_intersection = ((source_vec.x - bd.v1->pos.x)*(bd.v1->pos.y - bd.v2->pos.y) - (source_vec.y - bd.v1->pos.y)*(bd.v1->pos.x - bd.v2->pos.x))
+						  	/ (sin(angle)*(bd.v1->pos.x - bd.v2->pos.x) - cos(angle)*(bd.v1->pos.y - bd.v2->pos.y));
 
-			float len_to_intersection = ((source_vec.x - bd.p1.x)*(bd.p1.y - bd.p2.y) - (source_vec.y - bd.p1.y)*(bd.p1.x - bd.p2.x))
-						  / (sin(angle)*(bd.p1.x - bd.p2.x) - cos(angle)*(bd.p1.y - bd.p2.y));
+				float per_along_boundary = (cos(angle)*(source_vec.y - bd.v1->pos.y) - sin(angle)*(source_vec.x - bd.v1->pos.x))
+			   	                 	/ (sin(angle)*(bd.v1->pos.x - bd.v2->pos.x) - cos(angle)*(bd.v1->pos.y - bd.v2->pos.y));
 
-			float per_along_boundary = (cos(angle)*(source_vec.y - bd.p1.y) - sin(angle)*(source_vec.x - bd.p1.x))
-			   	                 / (sin(angle)*(bd.p1.x - bd.p2.x) - cos(angle)*(bd.p1.y - bd.p2.y));
-
-			if (0 <= per_along_boundary && per_along_boundary <= 1 && len_to_intersection > 0 && len_to_intersection < min_len)
-			{
-				min_len = len_to_intersection;
-				incident_boundary = &bd;
-			}
+				if (0 <= per_along_boundary && per_along_boundary <= 1 && len_to_intersection > 0 && len_to_intersection < min_len)
+				{
+					min_len = len_to_intersection;
+					incident_boundary = &bd;
+				}
+			//}
 		}
 	}
 
@@ -99,3 +102,22 @@ void Beam::calcIncidence(vector<Boundary>& boundaries)
 		reflection = nullptr;
 	}
 }
+
+/*
+bool Beam::checkBoundary(vector<vec2> bounding_box) // is this function itself optimized? -> answer: no
+{
+	bool result = false;
+
+	for (vec2 vertex : bounding_box)
+	{
+		vec2 source_to_vertex = vertex - source_vec;
+
+		if ((vertex.x - source_vec.x)*cos(angle) >= 0 && (vertex.y - source_vec.y)*sin(angle) >= 0)
+		{
+			result = true;
+		}
+	}
+
+	return result;
+}
+*/
